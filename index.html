@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <script src="js/jquery-3.5.1.min.js"></script>
+        <title>Табличная вёрстка</title>
+        <style>
+            table#form {
+                width: 100%;
+                padding: 5%;
+            }
+            table#footer {
+                border: 2px double;
+                width: 100%;
+            }
+            body {
+                background-color:maroon;
+                color: aliceblue;
+            }
+            tr#header {
+                font-family: serif;
+                font-size: 30px;
+            }
+            img {
+                border-radius: 90%;
+            }
+            
+        </style>
+    </head>
+    <body>
+        
+        <table id="form">
+            <tr id="header">
+                <th id="time" align="right"></th>
+                <th colspan=2 align="left">Клименко Вячеслав P32081 Вар. 1907</th>
+            </tr>
+            <tr>
+                <td>
+                    <img src="img/graf.jpg" alt="график"/>
+                </td>
+                <td>
+                    <form>
+                        <fieldset>
+                            <p>Введите X:
+                                <input type="button" class="X" value="-4">
+                                <input type="button" class="X" value="-3">
+                                <input type="button" class="X" value="-2">
+                                <input type="button" class="X" value="-1">
+                                <input type="button" class="X" value="0">
+                                <input type="button" class="X" value="1">
+                                <input type="button" class="X" value="2">
+                                <input type="button" class="X" value="3">
+                                <input type="button" class="X" value="4"></p>
+                            <p>Введите Y:<input type="text" class="Y" pattern="^-?\d+.?\d*(?:e-?\d+)?$"></p>
+                            <p>Введите R:
+                                    <input type="checkbox" class="R" value="1">1
+                                    <input type="checkbox" class="R" value="1.5">1.5
+                                    <input type="checkbox" class="R" value="2">2
+                                    <input type="checkbox" class="R" value="2.5">2.5
+                                    <input type="checkbox" class="R" value="3">3
+                            </p>
+                            <p id="coordinates"></p>
+                            <input type="button" value="Рассчитать" onclick="subm();">
+                        </fieldset>
+                    </form>
+                </td>
+            </tr>
+            <td>
+                <table id="footer">
+                </table>
+            </td>
+        </table>
+        <script type="text/javascript">
+
+            let xCoord = 0;
+            let yCoord = 0;
+            let rCoord = 0;
+            let headerTable = "<tr>\
+                            <td>X</td>\
+                            <td>Y</td>\
+                            <td>R</td>\
+                            <td>Попадание</td>\
+                            <td>Время работы скрипта, с</td>\
+                            </tr>";
+
+            function subm() {
+                $.ajax({
+                    type: 'GET',
+                    url: 'handler.php',
+                    data: {x: xCoord, y: yCoord, r: rCoord},
+                    success: function(data){
+                        getCookies();
+                        alert(data);
+                    }
+                });
+            }
+
+            function getCookies() {
+                let cookies = decodeURIComponent(document.cookie).split(';');
+                let str = "";
+                cookies.forEach(element => {
+                    if(element.includes('hit')) {
+                        str = str + element.split('=')[1];
+                    }
+                });
+                setTable(str);
+            }
+
+            function setTable(element) {
+                footer.innerHTML = headerTable + decodeURIComponent(element);
+            }
+
+            function chooseX(e) {
+                xCoord = parseFloat(e.target.value);
+                updateValues();
+            }
+
+            function chooseY(e) {
+                yCoord = parseFloat(e.target.value);
+                updateValues();
+            }
+
+            function chooseR(e) {
+                const rChoose = document.querySelectorAll(".R");
+                for (let i = 0; i < rChoose.length; i++) {
+                    rChoose[i].checked = false;
+                }
+                e.target.checked = true;
+                rCoord = parseFloat(e.target.value);
+                updateValues();
+            }
+
+            function updateValues() {
+                coordinates.innerHTML = "X= " + xCoord + "; Y= " + yCoord + "; R= " + rCoord;
+            }
+            
+            updateValues();
+            getCookies();
+
+            const xChoose = document.querySelectorAll(".X");
+            for (let i = 0; i < xChoose.length; i++) {
+                xChoose[i].onclick = chooseX;
+            }
+
+            const yChoose = document.querySelector(".Y");
+            yChoose.oninput = chooseY;
+
+            const rChoose = document.querySelectorAll(".R");
+            for (let i = 0; i < rChoose.length; i++) {
+                rChoose[i].onchange = chooseR;
+            }
+
+            function getTime() {
+                const date = new Date();
+                let hours = date.getHours();
+                let min = date.getMinutes();
+                let sec = date.getSeconds();
+
+                if(hours < 10) {
+                    hours = '0' + hours;
+                }
+                if(min < 10) {
+                    min = '0' + min;
+                }
+                if(sec < 10) {
+                    sec = '0' + sec;
+                }
+                document.getElementById('time').innerHTML = hours + ':' + min + ':' + sec;
+            }
+            setInterval(getTime, 0);            
+        </script>
+    </body>
+</html>
