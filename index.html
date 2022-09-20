@@ -92,7 +92,6 @@
                     data: {x: xCoord, y: yCoord, r: rCoord},
                     success: function(data){
                         getCookies();
-                        alert(data);
                     }
                 });
             }
@@ -120,7 +119,7 @@
             function chooseY(e) {
                 yCoord = parseFloat(e.target.value);
                 submit.removeAttribute('disabled');
-                if(isNaN(yCoord)) {
+                if(isNaN(yCoord) || yCoord < -5 || yCoord > 3) {
                     submit.setAttribute('disabled', true);
                 }
                 updateValues();
