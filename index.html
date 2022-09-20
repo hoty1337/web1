@@ -50,16 +50,16 @@
                                 <input type="button" class="X" value="2">
                                 <input type="button" class="X" value="3">
                                 <input type="button" class="X" value="4"></p>
-                            <p>Введите Y:<input type="text" class="Y" pattern="^-?\d+.?\d*(?:e-?\d+)?$"></p>
+                            <p>Введите Y:<input type="text" placeholder="от -5 до 3" value="0" class="Y" pattern="^-?\d+.?\d*(?:e-?\d+)?$"></p>
                             <p>Введите R:
-                                    <input type="checkbox" class="R" value="1">1
+                                    <input type="checkbox" class="R" value="1" checked>1
                                     <input type="checkbox" class="R" value="1.5">1.5
                                     <input type="checkbox" class="R" value="2">2
                                     <input type="checkbox" class="R" value="2.5">2.5
                                     <input type="checkbox" class="R" value="3">3
                             </p>
                             <p id="coordinates"></p>
-                            <input type="button" value="Рассчитать" onclick="subm();">
+                            <input type="button" id="submit" value="Рассчитать" onclick="subm();">
                         </fieldset>
                     </form>
                 </td>
@@ -73,7 +73,7 @@
 
             let xCoord = 0;
             let yCoord = 0;
-            let rCoord = 0;
+            let rCoord = 1;
             let headerTable = "<tr>\
                             <td>X</td>\
                             <td>Y</td>\
@@ -116,6 +116,10 @@
 
             function chooseY(e) {
                 yCoord = parseFloat(e.target.value);
+                submit.removeAttribute('disabled');
+                if(isNaN(yCoord)) {
+                    submit.setAttribute('disabled', true);
+                }
                 updateValues();
             }
 
