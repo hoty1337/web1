@@ -15,6 +15,7 @@ if(($x + $y >= -$r) && $x <= 0 && $y <= 0 ||
     ($x*$x + $y*$y <= $r*$r) && $x >= 0 && $y <= 0) {
     $hit = 'Попадание.';
 }
+
 $time = time();
 $time_end = microtime(true);
 $time_diff = $time_end - $_SERVER["REQUEST_TIME_FLOAT"];
